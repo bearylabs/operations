@@ -13,10 +13,11 @@ Infrastructure mono-repo for homelab k3s clusters. Managed with Terraform, Ansib
 | Load balancer | MetalLB |
 | Ingress | Traefik |
 | TLS | cert-manager + Let's Encrypt |
+| Storage | democratic-csi + TrueNAS SCALE |
 
 ## Infrastructure
 
-Proxmox on Intel Mac Mini (16GB RAM).
+Proxmox on Intel Mac Mini (16GB RAM). Storage on TrueNAS SCALE (`10.8.10.40`, 225GB pool `nas-01`).
 
 ### Network — 10.8.10.0/24
 
@@ -66,3 +67,4 @@ docs/                            # Runbooks and guides
 - [cert-manager & TLS](docs/cert-manager.md)
 - [DNS Setup](docs/dns.md)
 - [Runbook: Add New Service](docs/runbook-new-service.md)
+- [Storage](docs/storage.md)

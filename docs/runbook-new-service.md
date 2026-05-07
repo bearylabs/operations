@@ -112,11 +112,30 @@ spec:
     secretName: my-app-tls
 ```
 
-## 6. Secrets
+## 6. Persistent storage (if needed)
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-app-data
+  namespace: my-app
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: truenas-nfs
+```
+
+Use `ReadWriteMany` for NFS (multiple pods can mount). See [Storage](storage.md) for details.
+
+## 7. Secrets
 
 Seal any secrets before committing. See [Sealed Secrets](sealed-secrets.md).
 
-## 7. Commit and push
+## 8. Commit and push
 
 ```
 feat(apps): add my-app
@@ -124,7 +143,7 @@ feat(apps): add my-app
 
 ArgoCD syncs within seconds. Monitor in ArgoCD UI at `https://argocd.prod.beary.cloud`.
 
-## Checklist
+## 9. Checklist
 
 - [ ] Application manifest in `kubernetes/apps/onprem-prod/`
 - [ ] Namespace set with `CreateNamespace=true`
