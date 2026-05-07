@@ -1,0 +1,110 @@
+---
+- name: Common setup
+  hosts: k3s_cluster
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name:
+          - curl
+          - wget
+          - qemu-guest-agent
+        state: present
+
+    - name: Start and enable qemu-guest-agent
+      service:
+        name: qemu-guest-agent
+        state: started
+        enabled: true
+
+    - name: Disable swap
+      command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    - name: Remove swap from fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '\sswap\s'
+        state: absent
+
+    - name: Load br_netfilter module
+      modprobe:
+        name: br_netfilter
+        state: present
+
+    - name: Persist br_netfilter on boot
+      copy:
+        content: "br_netfilter\n"
+        dest: /etc/modules-load.d/br_netfilter.conf
+
+    - name: Set required sysctl values
+      sysctl:
+        name: "{{ item }}"
+        value: "1"
+        sysctl_set: true
+        state: present
+        reload: true
+      loop:
+        - net.ipv4.ip_forward
+        - net.bridge.bridge-nf-call-iptables
+        - net.bridge.bridge-nf-call-ip6tables
+
+- name: Install k3s server
+  hosts: k3s_server
+  become: true
+  tasks:
+    - name: Install k3s server
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" sh -s - server \
+          --disable traefik \
+          --disable servicelb \
+          --node-ip {{ k3s_server_ip }} \
+          --tls-san {{ k3s_server_ip }}
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for node-token
+      wait_for:
+        path: /var/lib/rancher/k3s/server/node-token
+        timeout: 120
+
+    - name: Read node-token
+      slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: k3s_token_raw
+
+    - name: Store token as fact
+      set_fact:
+        k3s_token: "{{ k3s_token_raw.content | b64decode | trim }}"
+
+    - name: Fetch kubeconfig
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/config-onprem
+        flat: true
+
+    - name: Fix kubeconfig server address
+      delegate_to: localhost
+      become: false
+      replace:
+        path: ~/.kube/config-onprem
+        regexp: 'https://127\.0\.0\.1:6443'
+        replace: "https://{{ k3s_server_ip }}:6443"
+
+- name: Install k3s agents
+  hosts: k3s_workers
+  become: true
+  tasks:
+    - name: Install k3s agent
+      shell: |
+        curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" \
+          K3S_URL="https://{{ k3s_server_ip }}:6443" \
+          K3S_TOKEN="{{ hostvars[groups['k3s_server'][0]]['k3s_token'] }}" \
+          sh -
+      args:
+        creates: /usr/local/bin/k3s
