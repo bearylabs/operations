@@ -18,6 +18,8 @@ spec:
             name: "org.democratic-csi.nfs"
           driver:
             existingConfigSecret: democratic-csi-nfs-config
+            config:
+              driver: freenas-api-nfs
           storageClasses:
             - name: truenas-nfs
               defaultClass: true
