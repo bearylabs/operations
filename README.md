@@ -1,6 +1,6 @@
 # operations
 
-Infrastructure mono-repo for home lab k3s cluster. Managed with Terraform, Ansible, and ArgoCD.
+Infrastructure mono-repo for homelab k3s clusters. Managed with Terraform, Ansible, and ArgoCD.
 
 ## Stack
 
@@ -11,7 +11,8 @@ Infrastructure mono-repo for home lab k3s cluster. Managed with Terraform, Ansib
 | GitOps | ArgoCD |
 | Secrets | Sealed Secrets |
 | Load balancer | MetalLB |
-| Ingress | Traefik (via ArgoCD) |
+| Ingress | Traefik |
+| TLS | cert-manager + Let's Encrypt |
 
 ## Infrastructure
 
@@ -28,24 +29,32 @@ Proxmox on Intel Mac Mini (16GB RAM).
 | 10.8.10.70–89 | k3s nodes |
 | 10.8.10.90–99 | MetalLB pool (k3s LoadBalancer IPs) |
 
-Gateway: `10.8.10.1` — DNS: `10.8.10.50`
+Gateway: `10.8.10.1` — DNS: `10.8.10.50` (BIND9)
 
-### k3s Cluster — onprem-prod
+### Clusters
 
-| Node | IP | Role | vCPU | RAM |
-|------|----|------|------|-----|
-| k3s-server | 10.8.10.70 | control plane | 2 | 4GB |
-| k3s-worker-1 | 10.8.10.71 | worker | 2 | 4GB |
-| k3s-worker-2 | 10.8.10.72 | worker | 2 | 4GB |
+| Cluster | Nodes | Domain | Status |
+|---------|-------|--------|--------|
+| onprem-prod | 3 (Mac Mini / Proxmox) | `*.prod.beary.cloud` | active |
+| onprem-dev | — | `*.dev.beary.cloud` | planned (Raspberry Pi) |
+| oci-prod | — | `*.oci.beary.cloud` | on hold (capacity issues) |
+
+### onprem-prod nodes
+
+| Node | IP | Role | vCPU | RAM | k3s |
+|------|----|------|------|-----|-----|
+| k3s-server | 10.8.10.70 | control plane | 2 | 4GB | v1.32.4 |
+| k3s-worker-1 | 10.8.10.71 | worker | 2 | 4GB | v1.32.4 |
+| k3s-worker-2 | 10.8.10.72 | worker | 2 | 4GB | v1.32.4 |
 
 ## Repository Structure
 
 ```
-terraform/environments/onprem/   # Proxmox VM provisioning
+terraform/environments/onprem/   # Proxmox VM provisioning (done)
 terraform/environments/oci/      # OCI infra (on hold)
 ansible/playbooks/site.yml       # k3s bootstrap playbook
-kubernetes/clusters/onprem-prod/ # ArgoCD root Applications
-kubernetes/infrastructure/       # Infrastructure Applications (MetalLB, Sealed Secrets, Traefik)
+kubernetes/clusters/             # ArgoCD App of Apps entry points per cluster
+kubernetes/infrastructure/       # Infrastructure Applications (MetalLB, Traefik, cert-manager, etc.)
 kubernetes/apps/                 # Workload Applications
 docs/                            # Runbooks and guides
 ```
@@ -53,3 +62,7 @@ docs/                            # Runbooks and guides
 ## Docs
 
 - [ArgoCD Bootstrap](docs/argocd-bootstrap.md)
+- [Sealed Secrets](docs/sealed-secrets.md)
+- [cert-manager & TLS](docs/cert-manager.md)
+- [DNS Setup](docs/dns.md)
+- [Runbook: Add New Service](docs/runbook-new-service.md)
