@@ -75,6 +75,20 @@ For each new cluster, add:
 | onprem-dev | `*.dev.beary.cloud` | TBD (Raspberry Pi) |
 | oci-prod | `*.oci.beary.cloud` | TBD |
 
+## Split-horizon caveat with cert-manager
+
+BIND9 is authoritative for `prod.beary.cloud` locally. cert-manager uses cluster DNS (CoreDNS → BIND9) by default. BIND9 does not have `_acme-challenge` TXT records — only Cloudflare does. This causes DNS-01 challenges to hang indefinitely.
+
+**Fix applied in cert-manager Helm values:**
+
+```yaml
+extraArgs:
+  - --dns01-recursive-nameservers-only
+  - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53
+```
+
+cert-manager now uses Cloudflare/Google DNS for TXT record verification, bypassing BIND9. This must be set for any cluster with local authoritative DNS.
+
 ## Verify DNS resolution
 
 ```bash
