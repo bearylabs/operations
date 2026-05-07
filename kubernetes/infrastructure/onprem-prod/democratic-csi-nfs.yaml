@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: democratic-csi-nfs
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+    - repoURL: https://democratic-csi.github.io/charts
+      chart: democratic-csi
+      targetRevision: 0.15.1
+      helm:
+        releaseName: democratic-csi-nfs
+        values: |
+          csiDriver:
+            name: "org.democratic-csi.nfs"
+          driver:
+            existingConfigSecret: democratic-csi-nfs-config
+          storageClasses:
+            - name: truenas-nfs
+              defaultClass: true
+              reclaimPolicy: Delete
+              volumeBindingMode: Immediate
+              allowVolumeExpansion: true
+              parameters:
+                fsType: nfs
+              mountOptions:
+                - noatime
+                - nfsvers=4
+          volumeSnapshotClasses:
+            - name: truenas-nfs
+              deletionPolicy: Delete
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: democratic-csi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
