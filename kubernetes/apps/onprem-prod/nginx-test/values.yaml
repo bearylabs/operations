@@ -7,7 +7,7 @@ controllers:
           tag: "1.27.5"
         resources:
           limits:
-            cpu: "100m"
+            cpu: "100"
             memory: "64"
 
 service:
