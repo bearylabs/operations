@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "{{ cookiecutter.app_name }}"
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://bjw-s-labs.github.io/helm-charts
+      chart: app-template
+      targetRevision: 3.7.3
+      helm:
+        valueFiles:
+          - $values/kubernetes/apps/onprem-prod/{{ cookiecutter.app_name }}/values.yaml
+    - repoURL: https://github.com/bearylabs/operations.git
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: "{{ cookiecutter.app_name }}"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

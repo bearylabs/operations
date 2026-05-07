@@ -1,0 +1,38 @@
+controllers:
+  "{{ cookiecutter.app_name }}":
+    containers:
+      app:
+        image:
+          repository: "{{ cookiecutter.docker_image }}"
+          tag: "{{ cookiecutter.initial_tag }}"
+        resources:
+          limits:
+            cpu: "{{ cookiecutter.cpu_limit }}"
+            memory: "{{ cookiecutter.memory_limit }}"
+
+service:
+  app:
+    controller: "{{ cookiecutter.app_name }}"
+    ports:
+      http:
+        port: "{{ cookiecutter.container_port }}"
+
+ingress:
+  app:
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: "{{ cookiecutter.subdomain }}.prod.beary.cloud"
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: app
+              port: http
+    tls:
+      - hosts:
+          - "{{ cookiecutter.subdomain }}.prod.beary.cloud"
+        secretName: "{{ cookiecutter.app_name }}-tls"

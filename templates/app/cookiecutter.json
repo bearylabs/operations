@@ -1,0 +1,9 @@
+{
+  "app_name": "myapp",
+  "docker_image": "dockeruser/myapp",
+  "container_port": "8080",
+  "subdomain": "myapp",
+  "initial_tag": "1.0.0",
+  "cpu_limit": "500m",
+  "memory_limit": "256Mi"
+}
