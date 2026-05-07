@@ -15,7 +15,7 @@ service:
     controller: "{{ cookiecutter.app_name }}"
     ports:
       http:
-        port: "{{ cookiecutter.container_port }}"
+        port: {{ cookiecutter.container_port }}
 
 ingress:
   app:
