@@ -6,6 +6,9 @@ controllers:
           repository: ghcr.io/home-assistant/home-assistant
           tag: "2026.4.1"
         resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
           limits:
             cpu: "2"
             memory: 1Gi
