@@ -1,0 +1,38 @@
+controllers:
+  "nginx-test":
+    containers:
+      app:
+        image:
+          repository: "nginx"
+          tag: "1.27.5"
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "64"
+
+service:
+  app:
+    controller: "nginx-test"
+    ports:
+      http:
+        port: "80"
+
+ingress:
+  app:
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: "nginx-test.prod.beary.cloud"
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: app
+              port: http
+    tls:
+      - hosts:
+          - "nginx-test.prod.beary.cloud"
+        secretName: "nginx-test-tls"
