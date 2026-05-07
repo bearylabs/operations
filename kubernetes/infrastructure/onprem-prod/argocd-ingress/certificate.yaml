@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: argocd-tls
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
     - argocd.prod.beary.cloud
