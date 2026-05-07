@@ -1,0 +1,8 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: onprem-prod-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.8.10.90-10.8.10.99
