@@ -1,0 +1,6 @@
+# Copy to terraform.tfvars and fill in — never commit terraform.tfvars
+proxmox_endpoint  = "https://10.8.10.19:8006/"
+proxmox_api_token = "root@pam!terraform=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+proxmox_node      = "pve"
+ssh_public_key    = "ssh-ed25519 AAAA..."
+cluster_name      = "k3s"
