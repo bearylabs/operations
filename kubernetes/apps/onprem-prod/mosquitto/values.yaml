@@ -1,0 +1,66 @@
+controllers:
+  mosquitto:
+    containers:
+      app:
+        image:
+          repository: eclipse-mosquitto
+          tag: "2.1.2-alpine"
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      mosquitto.conf: |
+        listener 1883
+        allow_anonymous true
+
+        listener 9001
+        protocol websockets
+        allow_anonymous true
+
+        persistence true
+        persistence_location /mosquitto/data/
+
+        log_dest file /mosquitto/log/mosquitto.log
+        log_dest stdout
+
+service:
+  app:
+    controller: mosquitto
+    type: LoadBalancer
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: 10.8.10.91
+    ports:
+      mqtt:
+        port: 1883
+        protocol: TCP
+      websocket:
+        port: 9001
+        protocol: TCP
+
+persistence:
+  config:
+    type: configMap
+    name: mosquitto-config
+    advancedMounts:
+      mosquitto:
+        app:
+          - path: /mosquitto/config/mosquitto.conf
+            subPath: mosquitto.conf
+            readOnly: true
+  data:
+    storageClass: truenas-nfs
+    accessMode: ReadWriteOnce
+    size: 1Gi
+    globalMounts:
+      - path: /mosquitto/data
+  log:
+    storageClass: truenas-nfs
+    accessMode: ReadWriteOnce
+    size: 500Mi
+    globalMounts:
+      - path: /mosquitto/log

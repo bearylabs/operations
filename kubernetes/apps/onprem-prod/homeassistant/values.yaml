@@ -1,0 +1,58 @@
+controllers:
+  homeassistant:
+    containers:
+      app:
+        image:
+          repository: ghcr.io/home-assistant/home-assistant
+          tag: "2026.4.1"
+        resources:
+          limits:
+            cpu: "2"
+            memory: 1Gi
+
+# Uncomment if you need mDNS/device discovery (Zigbee, Z-Wave, etc.)
+# defaultPodOptions:
+#   hostNetwork: true
+#   dnsPolicy: ClusterFirstWithHostNet
+
+service:
+  app:
+    controller: homeassistant
+    ports:
+      http:
+        port: 8123
+
+ingress:
+  app:
+    className: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      traefik.ingress.kubernetes.io/router.tls: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: home.prod.beary.cloud
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: app
+              port: http
+    tls:
+      - hosts:
+          - home.prod.beary.cloud
+        secretName: homeassistant-tls
+
+persistence:
+  config:
+    storageClass: truenas-nfs
+    accessMode: ReadWriteOnce
+    size: 5Gi
+    globalMounts:
+      - path: /config
+  localtime:
+    type: hostPath
+    hostPath: /etc/localtime
+    hostPathType: File
+    globalMounts:
+      - path: /etc/localtime
+        readOnly: true
