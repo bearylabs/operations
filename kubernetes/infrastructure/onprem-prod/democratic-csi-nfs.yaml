@@ -31,9 +31,8 @@ spec:
               mountOptions:
                 - noatime
                 - nfsvers=4
-          volumeSnapshotClasses:
-            - name: truenas-nfs
-              deletionPolicy: Delete
+          # volumeSnapshotClasses disabled — requires external-snapshotter CRDs
+          # enable after installing snapshot-controller
   destination:
     server: https://kubernetes.default.svc
     namespace: democratic-csi
