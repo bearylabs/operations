@@ -18,3 +18,5 @@ ansible/inventory/onprem/hosts.ini
 **/.vault_pass
 kubeconfig*
 !kubeconfig.example
+
+tmp/

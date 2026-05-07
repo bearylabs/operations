@@ -14,6 +14,7 @@
           - curl
           - wget
           - qemu-guest-agent
+          - nfs-common
         state: present
 
     - name: Start and enable qemu-guest-agent
