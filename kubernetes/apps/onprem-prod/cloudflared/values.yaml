@@ -1,0 +1,21 @@
+controllers:
+  cloudflared:
+    containers:
+      app:
+        image:
+          repository: cloudflare/cloudflared
+          tag: "2025.4.0"
+        args:
+          - tunnel
+          - --no-autoupdate
+          - run
+        env:
+          TUNNEL_TOKEN:
+            valueFrom:
+              secretKeyRef:
+                name: cloudflared-token
+                key: token
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
