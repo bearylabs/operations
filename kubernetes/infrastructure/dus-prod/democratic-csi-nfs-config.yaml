@@ -1,18 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: apps
+  name: democratic-csi-nfs-config
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   project: default
   source:
     repoURL: https://github.com/bearylabs/operations.git
     targetRevision: HEAD
-    path: kubernetes/apps/onprem-prod
+    path: kubernetes/infrastructure/dus-prod/democratic-csi-nfs
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: democratic-csi
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

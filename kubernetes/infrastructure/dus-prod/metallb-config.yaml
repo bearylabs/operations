@@ -1,19 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager-config
+  name: metallb-config
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default
   source:
     repoURL: https://github.com/bearylabs/operations.git
     targetRevision: HEAD
-    path: kubernetes/infrastructure/onprem-prod/cert-manager-config
+    path: kubernetes/infrastructure/dus-prod/metallb-config
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager
+    namespace: metallb-system
   syncPolicy:
     automated:
       prune: true

@@ -36,17 +36,61 @@ Gateway: `10.8.10.1` — DNS: `10.8.10.50` (BIND9)
 
 | Cluster | Nodes | Domain | Status |
 |---------|-------|--------|--------|
-| onprem-prod | 3 (Mac Mini / Proxmox) | `*.prod.beary.cloud` | active |
-| onprem-dev | — | `*.dev.beary.cloud` | planned (Raspberry Pi) |
+| dus-prod | 3 (Mac Mini / Proxmox) | `*.prod.beary.cloud` | active |
+| dus-dev | — | `*.dev.beary.cloud` | planned (Raspberry Pi) |
 | oci-prod | — | `*.oci.beary.cloud` | on hold (capacity issues) |
 
-### onprem-prod nodes
+### dus-prod nodes
 
 | Node | IP | Role | vCPU | RAM | k3s |
 |------|----|------|------|-----|-----|
-| k3s-server | 10.8.10.70 | control plane | 2 | 4GB | v1.32.4 |
-| k3s-worker-1 | 10.8.10.71 | worker | 2 | 4GB | v1.32.4 |
-| k3s-worker-2 | 10.8.10.72 | worker | 2 | 4GB | v1.32.4 |
+| dus-cp-01 | 10.8.10.70 | control plane | 2 | 4GB | v1.32.4 |
+| dus-worker-01 | 10.8.10.71 | worker | 2 | 4GB | v1.32.4 |
+| dus-worker-02 | 10.8.10.72 | worker | 2 | 4GB | v1.32.4 |
+
+## Naming Scheme
+
+IATA airport code + role + index. Location-first, tool-agnostic.
+
+```
+{iata}-{role}-{index}     →   dus-cp-01, dus-wk-01, cgn-wk-01
+{iata}-{env}              →   dus-prod, dus-dev, fra-prod
+```
+
+### Location codes
+
+| Code | Location | Notes |
+|------|----------|-------|
+| `dus` | Düsseldorf region (Moers) | primary site |
+| `oci` | OCI region | use OCI region IATA (e.g. `fra` for Frankfurt) |
+
+Multiple sites same city → add index: `dus1`, `dus2`.
+
+### Role codes
+
+| Code | Role |
+|------|------|
+| `cp` | control plane |
+| `worker` | worker node |
+| `ext` | external node — Tailscale-connected, not on controlled network |
+
+### Examples
+
+```
+dus-cp-01         control plane, primary site
+dus-worker-01     worker, primary site
+dus-worker-02     worker, primary site
+dus-ext-01        external node (friend's machine, VPS, etc.)
+dus-ext-02        second external node
+```
+
+### Clusters
+
+```
+dus-prod        onprem production (Proxmox)
+dus-dev         onprem dev (Raspberry Pi, planned)
+fra-prod        OCI production (on hold)
+```
 
 ## Repository Structure
 

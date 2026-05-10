@@ -75,7 +75,7 @@ Common issues:
 
 ## Cloudflare API token
 
-Stored as a Sealed Secret in `kubernetes/infrastructure/onprem-prod/cert-manager-config/cloudflare-api-token-sealed.yaml`.
+Stored as a Sealed Secret in `kubernetes/infrastructure/dus-prod/cert-manager-config/cloudflare-api-token-sealed.yaml`.
 
 Token permissions required: `Zone:DNS:Edit` scoped to `beary.cloud`.
 

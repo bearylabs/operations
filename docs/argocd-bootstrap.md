@@ -67,10 +67,10 @@ Save this password. Rotate it after first login.
 Apply the root Application once — ArgoCD takes over from here:
 
 ```bash
-kubectl apply -f kubernetes/clusters/onprem-prod/infrastructure.yaml
+kubectl apply -f kubernetes/clusters/dus-prod/infrastructure.yaml
 ```
 
-ArgoCD now watches `kubernetes/infrastructure/onprem-prod/` and deploys everything automatically.
+ArgoCD now watches `kubernetes/infrastructure/dus-prod/` and deploys everything automatically.
 
 ## 5. Verify (temporary port-forward)
 

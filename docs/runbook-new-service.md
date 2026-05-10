@@ -1,11 +1,11 @@
 # Runbook: Add New Service
 
-Step-by-step for deploying a new application to `onprem-prod` via ArgoCD.
+Step-by-step for deploying a new application to `dus-prod` via ArgoCD.
 
 ## 1. Create app directory
 
 ```
-kubernetes/apps/onprem-prod/
+kubernetes/apps/dus-prod/
   my-app/
     application.yaml       # ArgoCD Application
     deployment.yaml        # or Helm values, or kustomization
@@ -16,7 +16,7 @@ kubernetes/apps/onprem-prod/
 
 ## 2. ArgoCD Application manifest
 
-`kubernetes/apps/onprem-prod/my-app/application.yaml`:
+`kubernetes/apps/dus-prod/my-app/application.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -29,7 +29,7 @@ spec:
   source:
     repoURL: https://github.com/bearylabs/operations.git
     targetRevision: HEAD
-    path: kubernetes/apps/onprem-prod/my-app
+    path: kubernetes/apps/dus-prod/my-app
   destination:
     server: https://kubernetes.default.svc
     namespace: my-app
@@ -43,7 +43,7 @@ spec:
 
 ## 3. Add to parent apps Application
 
-Create `kubernetes/clusters/onprem-prod/apps.yaml` if it doesn't exist:
+Create `kubernetes/clusters/dus-prod/apps.yaml` if it doesn't exist:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -56,7 +56,7 @@ spec:
   source:
     repoURL: https://github.com/bearylabs/operations.git
     targetRevision: HEAD
-    path: kubernetes/apps/onprem-prod
+    path: kubernetes/apps/dus-prod
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
@@ -69,10 +69,10 @@ spec:
 Apply once manually:
 
 ```bash
-kubectl apply -f kubernetes/clusters/onprem-prod/apps.yaml
+kubectl apply -f kubernetes/clusters/dus-prod/apps.yaml
 ```
 
-After that, dropping any Application manifest into `kubernetes/apps/onprem-prod/` deploys it automatically.
+After that, dropping any Application manifest into `kubernetes/apps/dus-prod/` deploys it automatically.
 
 ## 4. TLS certificate
 
@@ -145,7 +145,7 @@ ArgoCD syncs within seconds. Monitor in ArgoCD UI at `https://argocd.prod.beary.
 
 ## 9. Checklist
 
-- [ ] Application manifest in `kubernetes/apps/onprem-prod/`
+- [ ] Application manifest in `kubernetes/apps/dus-prod/`
 - [ ] Namespace set with `CreateNamespace=true`
 - [ ] Certificate using `letsencrypt-prod`
 - [ ] IngressRoute referencing correct `secretName`

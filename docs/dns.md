@@ -71,7 +71,7 @@ For each new cluster, add:
 
 | Cluster | Domain | Traefik IP |
 |---------|--------|------------|
-| onprem-prod | `*.prod.beary.cloud` | `10.8.10.90` |
+| dus-prod | `*.prod.beary.cloud` | `10.8.10.90` |
 | onprem-dev | `*.dev.beary.cloud` | TBD (Raspberry Pi) |
 | oci-prod | `*.oci.beary.cloud` | TBD |
 

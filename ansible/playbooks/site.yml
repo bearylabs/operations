@@ -1,6 +1,6 @@
 ---
 - name: Common setup
-  hosts: k3s_cluster
+  hosts: cluster
   become: true
   tasks:
     - name: Update apt cache
@@ -56,7 +56,7 @@
         - net.bridge.bridge-nf-call-ip6tables
 
 - name: Install k3s server
-  hosts: k3s_server
+  hosts: control_plane
   become: true
   tasks:
     - name: Install k3s server
@@ -64,8 +64,8 @@
         curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" sh -s - server \
           --disable traefik \
           --disable servicelb \
-          --node-ip {{ k3s_server_ip }} \
-          --tls-san {{ k3s_server_ip }}
+          --node-ip {{ control_plane_ip }} \
+          --tls-san {{ control_plane_ip }}
       args:
         creates: /usr/local/bin/k3s
 
@@ -95,17 +95,17 @@
       replace:
         path: ~/.kube/config-onprem
         regexp: 'https://127\.0\.0\.1:6443'
-        replace: "https://{{ k3s_server_ip }}:6443"
+        replace: "https://{{ control_plane_ip }}:6443"
 
 - name: Install k3s agents
-  hosts: k3s_workers
+  hosts: workers
   become: true
   tasks:
     - name: Install k3s agent
       shell: |
         curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" \
-          K3S_URL="https://{{ k3s_server_ip }}:6443" \
-          K3S_TOKEN="{{ hostvars[groups['k3s_server'][0]]['k3s_token'] }}" \
+          K3S_URL="https://{{ control_plane_ip }}:6443" \
+          K3S_TOKEN="{{ hostvars[groups['control_plane'][0]]['k3s_token'] }}" \
           sh -
       args:
         creates: /usr/local/bin/k3s

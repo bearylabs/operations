@@ -11,7 +11,7 @@ spec:
       targetRevision: 3.7.3
       helm:
         valueFiles:
-          - $values/kubernetes/apps/onprem-prod/{{ cookiecutter.app_name }}/values.yaml
+          - $values/kubernetes/apps/dus-prod/{{ cookiecutter.app_name }}/values.yaml
     - repoURL: https://github.com/bearylabs/operations.git
       targetRevision: HEAD
       ref: values

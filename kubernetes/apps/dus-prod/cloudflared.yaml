@@ -11,13 +11,13 @@ spec:
       targetRevision: 3.7.3
       helm:
         valueFiles:
-          - $values/kubernetes/apps/onprem-prod/cloudflared/values.yaml
+          - $values/kubernetes/apps/dus-prod/cloudflared/values.yaml
     - repoURL: https://github.com/bearylabs/operations.git
       targetRevision: HEAD
       ref: values
     - repoURL: https://github.com/bearylabs/operations.git
       targetRevision: HEAD
-      path: kubernetes/apps/onprem-prod/cloudflared/secret
+      path: kubernetes/apps/dus-prod/cloudflared/secret
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudflared

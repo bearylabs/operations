@@ -1,7 +1,7 @@
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: onprem-prod-pool
+  name: dus-prod-pool
   namespace: metallb-system
 spec:
   addresses:
