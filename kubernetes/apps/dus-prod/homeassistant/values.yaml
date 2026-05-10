@@ -40,9 +40,17 @@ ingress:
             service:
               identifier: app
               port: http
+      - host: home.beary.cloud
+        paths:
+          - path: /
+            pathType: Prefix
+            service:
+              identifier: app
+              port: http
     tls:
       - hosts:
           - home.prod.beary.cloud
+          - home.beary.cloud
         secretName: homeassistant-tls
 
 persistence:
