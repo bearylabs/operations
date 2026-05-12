@@ -129,6 +129,6 @@ resource "local_file" "ansible_inventory" {
     worker_ips   = [for k, v in local.workers : v.ip]
     ssh_user     = "ubuntu"
   })
-  filename        = "${path.module}/../../../ansible/inventory/onprem/hosts.ini"
+  filename        = "${path.module}/../../../../ansible/inventories/dus-prod/hosts.ini"
   file_permission = "0644"
 }

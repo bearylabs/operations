@@ -87,16 +87,17 @@ dus-ext-02        second external node
 ### Clusters
 
 ```
-dus-prod        onprem production (Proxmox)
-dus-dev         onprem dev (Raspberry Pi, planned)
+dus-prod        Proxmox production
+dus-dev         Raspberry Pi dev (planned)
 fra-prod        OCI production (on hold)
 ```
 
 ## Repository Structure
 
 ```
-terraform/environments/onprem/   # Proxmox VM provisioning (done)
-terraform/environments/oci/      # OCI infra (on hold)
+terraform/live/dus-prod/proxmox-k3s/  # Proxmox k3s stack
+terraform/live/dus-prod/proxmox-maas/ # Proxmox MAAS stack
+terraform/live/fra-prod/oci-k3s/      # OCI k3s stack (on hold)
 ansible/playbooks/site.yml       # k3s bootstrap playbook
 kubernetes/clusters/             # ArgoCD App of Apps entry points per cluster
 kubernetes/infrastructure/       # Infrastructure Applications (MetalLB, Traefik, cert-manager, etc.)

@@ -9,8 +9,8 @@ override.tf.json
 
 # Ansible
 *.retry
-ansible/inventory/oci/hosts.ini
-ansible/inventory/onprem/hosts.ini
+ansible/inventories/fra-prod/hosts.ini
+ansible/inventories/dus-prod/hosts.ini
 
 # Secrets / keys
 *.pem

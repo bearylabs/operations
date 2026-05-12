@@ -89,6 +89,6 @@ resource "local_file" "ansible_inventory" {
     worker_ips = [for w in oci_core_instance.workers : w.public_ip]
     ssh_user   = "ubuntu"
   })
-  filename        = "${path.module}/../../../ansible/inventory/oci/hosts.ini"
+  filename        = "${path.module}/../../../../ansible/inventories/fra-prod/hosts.ini"
   file_permission = "0644"
 }
