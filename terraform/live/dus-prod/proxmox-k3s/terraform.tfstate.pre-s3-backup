@@ -1,0 +1,977 @@
+{
+  "version": 4,
+  "terraform_version": "1.14.9",
+  "serial": 33,
+  "lineage": "25fa92c0-357a-80dd-7898-868b69b6f3ab",
+  "outputs": {
+    "kubeconfig_fetch": {
+      "value": "ssh ubuntu@10.8.10.70 'sudo cat /etc/rancher/k3s/k3s.yaml' | sed 's/127.0.0.1/10.8.10.70/g' \u003e ~/.kube/config-onprem",
+      "type": "string"
+    },
+    "server_ip": {
+      "value": "10.8.10.70",
+      "type": "string"
+    },
+    "worker_ips": {
+      "value": {
+        "worker-01": "10.8.10.71",
+        "worker-02": "10.8.10.72"
+      },
+      "type": [
+        "object",
+        {
+          "worker-01": "string",
+          "worker-02": "string"
+        }
+      ]
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "local_file",
+      "name": "ansible_inventory",
+      "provider": "provider[\"registry.terraform.io/hashicorp/local\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "content": "[control_plane]\ndus-cp-01 ansible_host=10.8.10.70 ansible_user=ubuntu\n\n[workers]\ndus-worker-01 ansible_host=10.8.10.71 ansible_user=ubuntu\ndus-worker-02 ansible_host=10.8.10.72 ansible_user=ubuntu\n\n[cluster:children]\ncontrol_plane\nworkers\n\n[cluster:vars]\nansible_ssh_common_args='-o StrictHostKeyChecking=no'\nansible_ssh_private_key_file=~/.ssh/k3s_onprem\n",
+            "content_base64": null,
+            "content_base64sha256": "1jQmKasCGNJCaPYtCReEP0C0fhuKyeBlfe+3jDB0+kc=",
+            "content_base64sha512": "y1rTVbm8WESUFFJH76bv83JrI3+bfWrO7ZlAQHh5u6jh+G3v8gGF4NurY0pj6CE1tPPCdpps5Nv67dMB6DTEqg==",
+            "content_md5": "052d3246f32b05ae2bee0313922e390d",
+            "content_sha1": "2f905b4de0c66fb85f2669d088c7ce6cb8811fb6",
+            "content_sha256": "d6342629ab0218d24268f62d0917843f40b47e1b8ac9e0657defb78c3074fa47",
+            "content_sha512": "cb5ad355b9bc584494145247efa6eff3726b237f9b7d6aceed9940407879bba8e1f86deff20185e0dbab634a63e82135b4f3c2769a6ce4dbfaedd301e834c4aa",
+            "directory_permission": "0777",
+            "file_permission": "0644",
+            "filename": "./../../../ansible/inventory/onprem/hosts.ini",
+            "id": "2f905b4de0c66fb85f2669d088c7ce6cb8811fb6",
+            "sensitive_content": null,
+            "source": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "sensitive_content"
+              }
+            ]
+          ],
+          "identity_schema_version": 0
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "proxmox_virtual_environment_vm",
+      "name": "server",
+      "provider": "provider[\"registry.terraform.io/bpg/proxmox\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "acpi": true,
+            "agent": [
+              {
+                "enabled": true,
+                "timeout": "15m",
+                "trim": false,
+                "type": "virtio",
+                "wait_for_ip": []
+              }
+            ],
+            "amd_sev": [],
+            "audio_device": [],
+            "bios": "seabios",
+            "boot_order": [],
+            "cdrom": [],
+            "clone": [
+              {
+                "datastore_id": "",
+                "full": true,
+                "node_name": "",
+                "retries": 1,
+                "vm_id": 9000
+              }
+            ],
+            "cpu": [
+              {
+                "affinity": "",
+                "architecture": "",
+                "cores": 2,
+                "flags": [],
+                "hotplugged": 0,
+                "limit": 0,
+                "numa": false,
+                "sockets": 1,
+                "type": "x86-64-v2-AES",
+                "units": 0
+              }
+            ],
+            "delete_unreferenced_disks_on_destroy": true,
+            "description": null,
+            "disk": [
+              {
+                "aio": "io_uring",
+                "backup": true,
+                "cache": "none",
+                "datastore_id": "local-lvm",
+                "discard": "ignore",
+                "file_format": "raw",
+                "file_id": "",
+                "import_from": "",
+                "interface": "scsi0",
+                "iothread": false,
+                "path_in_datastore": "vm-200-disk-0",
+                "replicate": true,
+                "serial": "",
+                "size": 32,
+                "speed": [],
+                "ssd": false
+              }
+            ],
+            "efi_disk": [],
+            "hook_script_file_id": null,
+            "hostpci": [],
+            "hotplug": null,
+            "id": "200",
+            "initialization": [
+              {
+                "datastore_id": "local-lvm",
+                "dns": [
+                  {
+                    "domain": "",
+                    "servers": [
+                      "10.8.10.50"
+                    ]
+                  }
+                ],
+                "file_format": "",
+                "interface": "ide2",
+                "ip_config": [
+                  {
+                    "ipv4": [
+                      {
+                        "address": "10.8.10.70/24",
+                        "gateway": "10.8.10.1"
+                      }
+                    ],
+                    "ipv6": []
+                  }
+                ],
+                "meta_data_file_id": "",
+                "network_data_file_id": "",
+                "type": "",
+                "upgrade": true,
+                "user_account": [
+                  {
+                    "keys": [
+                      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGCC5gpZlCnQxzZ9zy9j7/RaP/nCw7RvPjgqUCJCphCw k3s-onprem"
+                    ],
+                    "password": "",
+                    "username": "ubuntu"
+                  }
+                ],
+                "user_data_file_id": "",
+                "vendor_data_file_id": ""
+              }
+            ],
+            "ipv4_addresses": [
+              [
+                "127.0.0.1"
+              ],
+              [
+                "10.8.10.70"
+              ],
+              [
+                "10.42.0.0"
+              ],
+              [
+                "10.42.0.1"
+              ],
+              [],
+              [],
+              [],
+              [],
+              [],
+              [],
+              [],
+              [],
+              []
+            ],
+            "ipv6_addresses": [
+              [
+                "::1"
+              ],
+              [
+                "fe80::be24:11ff:fee7:8fa3"
+              ],
+              [
+                "fe80::6446:d6ff:fe0b:b9a1"
+              ],
+              [
+                "fe80::9cdf:43ff:feee:c662"
+              ],
+              [
+                "fe80::4442:faff:fec0:558b"
+              ],
+              [
+                "fe80::dc9f:aff:fec4:8181"
+              ],
+              [
+                "fe80::7090:c1ff:fe4a:ee98"
+              ],
+              [
+                "fe80::a4c7:e0ff:fef9:85d6"
+              ],
+              [
+                "fe80::8081:dfff:fe05:9340"
+              ],
+              [
+                "fe80::902a:baff:fe1f:4972"
+              ],
+              [
+                "fe80::a0b2:5fff:fed2:e3cb"
+              ],
+              [
+                "fe80::f8fb:71ff:fecb:5568"
+              ],
+              [
+                "fe80::2488:6dff:fe51:77db"
+              ]
+            ],
+            "keyboard_layout": "en-us",
+            "kvm_arguments": null,
+            "mac_addresses": [
+              "00:00:00:00:00:00",
+              "BC:24:11:E7:8F:A3",
+              "66:46:D6:0B:B9:A1",
+              "9E:DF:43:EE:C6:62",
+              "46:42:FA:C0:55:8B",
+              "DE:9F:0A:C4:81:81",
+              "72:90:C1:4A:EE:98",
+              "A6:C7:E0:F9:85:D6",
+              "82:81:DF:05:93:40",
+              "92:2A:BA:1F:49:72",
+              "A2:B2:5F:D2:E3:CB",
+              "FA:FB:71:CB:55:68",
+              "26:88:6D:51:77:DB"
+            ],
+            "machine": null,
+            "memory": [
+              {
+                "dedicated": 4096,
+                "floating": 0,
+                "hugepages": "",
+                "keep_hugepages": false,
+                "shared": 0
+              }
+            ],
+            "migrate": false,
+            "name": "dus-cp-01",
+            "network_device": [
+              {
+                "bridge": "vmbr0",
+                "disconnected": false,
+                "enabled": true,
+                "firewall": false,
+                "mac_address": "BC:24:11:E7:8F:A3",
+                "model": "virtio",
+                "mtu": 0,
+                "queues": 0,
+                "rate_limit": 0,
+                "trunks": "",
+                "vlan_id": 0
+              }
+            ],
+            "network_interface_names": [
+              "lo",
+              "eth0",
+              "flannel.1",
+              "cni0",
+              "vethf30b2ad1",
+              "vethcd0178ba",
+              "veth85c2de67",
+              "veth5e3f218a",
+              "veth2f01ea3c",
+              "vethb9e3c2b1",
+              "vethc4b5c205",
+              "veth55c3c863",
+              "veth2abf0252"
+            ],
+            "node_name": "pve",
+            "numa": [],
+            "on_boot": true,
+            "operating_system": [
+              {
+                "type": "l26"
+              }
+            ],
+            "pool_id": "",
+            "protection": false,
+            "purge_on_destroy": true,
+            "reboot": false,
+            "reboot_after_update": true,
+            "rng": [],
+            "scsi_hardware": "virtio-scsi-pci",
+            "serial_device": [],
+            "smbios": [],
+            "started": true,
+            "startup": [],
+            "stop_on_destroy": false,
+            "tablet_device": true,
+            "tags": null,
+            "template": false,
+            "timeout_clone": 1800,
+            "timeout_create": 1800,
+            "timeout_migrate": 1800,
+            "timeout_move_disk": 1800,
+            "timeout_reboot": 1800,
+            "timeout_shutdown_vm": 1800,
+            "timeout_start_vm": 1800,
+            "timeout_stop_vm": 300,
+            "tpm_state": [],
+            "usb": [],
+            "vga": [
+              {
+                "clipboard": "",
+                "memory": 16,
+                "type": "serial0"
+              }
+            ],
+            "virtiofs": [],
+            "vm_id": 200,
+            "watchdog": []
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "initialization"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "user_account"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "password"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "proxmox_virtual_environment_vm",
+      "name": "workers",
+      "provider": "provider[\"registry.terraform.io/bpg/proxmox\"]",
+      "instances": [
+        {
+          "index_key": "worker-01",
+          "schema_version": 0,
+          "attributes": {
+            "acpi": true,
+            "agent": [
+              {
+                "enabled": true,
+                "timeout": "15m",
+                "trim": false,
+                "type": "virtio",
+                "wait_for_ip": []
+              }
+            ],
+            "amd_sev": [],
+            "audio_device": [],
+            "bios": "seabios",
+            "boot_order": [],
+            "cdrom": [],
+            "clone": [
+              {
+                "datastore_id": "",
+                "full": true,
+                "node_name": "",
+                "retries": 1,
+                "vm_id": 9000
+              }
+            ],
+            "cpu": [
+              {
+                "affinity": "",
+                "architecture": "",
+                "cores": 2,
+                "flags": [],
+                "hotplugged": 0,
+                "limit": 0,
+                "numa": false,
+                "sockets": 1,
+                "type": "x86-64-v2-AES",
+                "units": 0
+              }
+            ],
+            "delete_unreferenced_disks_on_destroy": true,
+            "description": null,
+            "disk": [
+              {
+                "aio": "io_uring",
+                "backup": true,
+                "cache": "none",
+                "datastore_id": "local-lvm",
+                "discard": "ignore",
+                "file_format": "raw",
+                "file_id": "",
+                "import_from": "",
+                "interface": "scsi0",
+                "iothread": false,
+                "path_in_datastore": "vm-201-disk-0",
+                "replicate": true,
+                "serial": "",
+                "size": 32,
+                "speed": [],
+                "ssd": false
+              }
+            ],
+            "efi_disk": [],
+            "hook_script_file_id": null,
+            "hostpci": [],
+            "hotplug": null,
+            "id": "201",
+            "initialization": [
+              {
+                "datastore_id": "local-lvm",
+                "dns": [
+                  {
+                    "domain": "",
+                    "servers": [
+                      "10.8.10.50"
+                    ]
+                  }
+                ],
+                "file_format": "",
+                "interface": "ide2",
+                "ip_config": [
+                  {
+                    "ipv4": [
+                      {
+                        "address": "10.8.10.71/24",
+                        "gateway": "10.8.10.1"
+                      }
+                    ],
+                    "ipv6": []
+                  }
+                ],
+                "meta_data_file_id": "",
+                "network_data_file_id": "",
+                "type": "",
+                "upgrade": true,
+                "user_account": [
+                  {
+                    "keys": [
+                      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGCC5gpZlCnQxzZ9zy9j7/RaP/nCw7RvPjgqUCJCphCw k3s-onprem"
+                    ],
+                    "password": "",
+                    "username": "ubuntu"
+                  }
+                ],
+                "user_data_file_id": "",
+                "vendor_data_file_id": ""
+              }
+            ],
+            "ipv4_addresses": [
+              [
+                "127.0.0.1"
+              ],
+              [
+                "10.8.10.71"
+              ],
+              [
+                "10.42.1.0"
+              ],
+              [
+                "10.42.1.1"
+              ],
+              [],
+              [],
+              [],
+              [],
+              []
+            ],
+            "ipv6_addresses": [
+              [
+                "::1"
+              ],
+              [
+                "fe80::be24:11ff:fe98:686e"
+              ],
+              [
+                "fe80::3c03:d9ff:fe12:9798"
+              ],
+              [
+                "fe80::888a:52ff:fe03:9ca4"
+              ],
+              [
+                "fe80::1c39:73ff:fe28:4733"
+              ],
+              [
+                "fe80::2412:74ff:fe7c:3dcc"
+              ],
+              [
+                "fe80::74c7:85ff:fea8:439"
+              ],
+              [
+                "fe80::cc70:11ff:fe01:10d1"
+              ],
+              [
+                "fe80::c4f7:5fff:feec:f633"
+              ]
+            ],
+            "keyboard_layout": "en-us",
+            "kvm_arguments": null,
+            "mac_addresses": [
+              "00:00:00:00:00:00",
+              "BC:24:11:98:68:6E",
+              "3E:03:D9:12:97:98",
+              "8A:8A:52:03:9C:A4",
+              "1E:39:73:28:47:33",
+              "26:12:74:7C:3D:CC",
+              "76:C7:85:A8:04:39",
+              "CE:70:11:01:10:D1",
+              "C6:F7:5F:EC:F6:33"
+            ],
+            "machine": null,
+            "memory": [
+              {
+                "dedicated": 4096,
+                "floating": 0,
+                "hugepages": "",
+                "keep_hugepages": false,
+                "shared": 0
+              }
+            ],
+            "migrate": false,
+            "name": "dus-worker-01",
+            "network_device": [
+              {
+                "bridge": "vmbr0",
+                "disconnected": false,
+                "enabled": true,
+                "firewall": false,
+                "mac_address": "BC:24:11:98:68:6E",
+                "model": "virtio",
+                "mtu": 0,
+                "queues": 0,
+                "rate_limit": 0,
+                "trunks": "",
+                "vlan_id": 0
+              }
+            ],
+            "network_interface_names": [
+              "lo",
+              "eth0",
+              "flannel.1",
+              "cni0",
+              "veth1ed093b9",
+              "vethc604f832",
+              "veth76fd41e5",
+              "veth3058efdd",
+              "vethb05fd6a9"
+            ],
+            "node_name": "pve",
+            "numa": [],
+            "on_boot": true,
+            "operating_system": [
+              {
+                "type": "l26"
+              }
+            ],
+            "pool_id": "",
+            "protection": false,
+            "purge_on_destroy": true,
+            "reboot": false,
+            "reboot_after_update": true,
+            "rng": [],
+            "scsi_hardware": "virtio-scsi-pci",
+            "serial_device": [],
+            "smbios": [],
+            "started": true,
+            "startup": [],
+            "stop_on_destroy": false,
+            "tablet_device": true,
+            "tags": null,
+            "template": false,
+            "timeout_clone": 1800,
+            "timeout_create": 1800,
+            "timeout_migrate": 1800,
+            "timeout_move_disk": 1800,
+            "timeout_reboot": 1800,
+            "timeout_shutdown_vm": 1800,
+            "timeout_start_vm": 1800,
+            "timeout_stop_vm": 300,
+            "tpm_state": [],
+            "usb": [],
+            "vga": [
+              {
+                "clipboard": "",
+                "memory": 16,
+                "type": "serial0"
+              }
+            ],
+            "virtiofs": [],
+            "vm_id": 201,
+            "watchdog": []
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "initialization"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "user_account"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "password"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        },
+        {
+          "index_key": "worker-02",
+          "schema_version": 0,
+          "attributes": {
+            "acpi": true,
+            "agent": [
+              {
+                "enabled": true,
+                "timeout": "15m",
+                "trim": false,
+                "type": "virtio",
+                "wait_for_ip": []
+              }
+            ],
+            "amd_sev": [],
+            "audio_device": [],
+            "bios": "seabios",
+            "boot_order": [],
+            "cdrom": [],
+            "clone": [
+              {
+                "datastore_id": "",
+                "full": true,
+                "node_name": "",
+                "retries": 1,
+                "vm_id": 9000
+              }
+            ],
+            "cpu": [
+              {
+                "affinity": "",
+                "architecture": "",
+                "cores": 2,
+                "flags": [],
+                "hotplugged": 0,
+                "limit": 0,
+                "numa": false,
+                "sockets": 1,
+                "type": "x86-64-v2-AES",
+                "units": 0
+              }
+            ],
+            "delete_unreferenced_disks_on_destroy": true,
+            "description": null,
+            "disk": [
+              {
+                "aio": "io_uring",
+                "backup": true,
+                "cache": "none",
+                "datastore_id": "local-lvm",
+                "discard": "ignore",
+                "file_format": "raw",
+                "file_id": "",
+                "import_from": "",
+                "interface": "scsi0",
+                "iothread": false,
+                "path_in_datastore": "vm-202-disk-0",
+                "replicate": true,
+                "serial": "",
+                "size": 32,
+                "speed": [],
+                "ssd": false
+              }
+            ],
+            "efi_disk": [],
+            "hook_script_file_id": null,
+            "hostpci": [],
+            "hotplug": null,
+            "id": "202",
+            "initialization": [
+              {
+                "datastore_id": "local-lvm",
+                "dns": [
+                  {
+                    "domain": "",
+                    "servers": [
+                      "10.8.10.50"
+                    ]
+                  }
+                ],
+                "file_format": "",
+                "interface": "ide2",
+                "ip_config": [
+                  {
+                    "ipv4": [
+                      {
+                        "address": "10.8.10.72/24",
+                        "gateway": "10.8.10.1"
+                      }
+                    ],
+                    "ipv6": []
+                  }
+                ],
+                "meta_data_file_id": "",
+                "network_data_file_id": "",
+                "type": "",
+                "upgrade": true,
+                "user_account": [
+                  {
+                    "keys": [
+                      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGCC5gpZlCnQxzZ9zy9j7/RaP/nCw7RvPjgqUCJCphCw k3s-onprem"
+                    ],
+                    "password": "",
+                    "username": "ubuntu"
+                  }
+                ],
+                "user_data_file_id": "",
+                "vendor_data_file_id": ""
+              }
+            ],
+            "ipv4_addresses": [
+              [
+                "127.0.0.1"
+              ],
+              [
+                "10.8.10.72"
+              ],
+              [
+                "10.42.2.0"
+              ],
+              [
+                "10.42.2.1"
+              ],
+              [],
+              [],
+              [],
+              [],
+              [],
+              [],
+              []
+            ],
+            "ipv6_addresses": [
+              [
+                "::1"
+              ],
+              [
+                "fe80::be24:11ff:fe4c:1def"
+              ],
+              [
+                "fe80::d4e4:bdff:fe63:9920"
+              ],
+              [
+                "fe80::f494:9bff:feaa:3ee7"
+              ],
+              [
+                "fe80::48aa:7dff:fe07:5beb"
+              ],
+              [
+                "fe80::5cd3:e0ff:fe95:fe39"
+              ],
+              [
+                "fe80::1c9d:d2ff:fe24:8711"
+              ],
+              [
+                "fe80::1c11:6cff:fe3a:4eaf"
+              ],
+              [
+                "fe80::5485:cdff:fec1:a104"
+              ],
+              [
+                "fe80::3ce2:5ff:fe68:967f"
+              ],
+              [
+                "fe80::f8ab:74ff:fe3d:b416"
+              ]
+            ],
+            "keyboard_layout": "en-us",
+            "kvm_arguments": null,
+            "mac_addresses": [
+              "00:00:00:00:00:00",
+              "BC:24:11:4C:1D:EF",
+              "D6:E4:BD:63:99:20",
+              "F6:94:9B:AA:3E:E7",
+              "4A:AA:7D:07:5B:EB",
+              "5E:D3:E0:95:FE:39",
+              "1E:9D:D2:24:87:11",
+              "1E:11:6C:3A:4E:AF",
+              "56:85:CD:C1:A1:04",
+              "3E:E2:05:68:96:7F",
+              "FA:AB:74:3D:B4:16"
+            ],
+            "machine": null,
+            "memory": [
+              {
+                "dedicated": 4096,
+                "floating": 0,
+                "hugepages": "",
+                "keep_hugepages": false,
+                "shared": 0
+              }
+            ],
+            "migrate": false,
+            "name": "dus-worker-02",
+            "network_device": [
+              {
+                "bridge": "vmbr0",
+                "disconnected": false,
+                "enabled": true,
+                "firewall": false,
+                "mac_address": "BC:24:11:4C:1D:EF",
+                "model": "virtio",
+                "mtu": 0,
+                "queues": 0,
+                "rate_limit": 0,
+                "trunks": "",
+                "vlan_id": 0
+              }
+            ],
+            "network_interface_names": [
+              "lo",
+              "eth0",
+              "flannel.1",
+              "cni0",
+              "veth97b056fc",
+              "vethb73a2c18",
+              "vethf496340b",
+              "veth6c103ad5",
+              "vethfdfafa10",
+              "veth2838e24a",
+              "veth21f32cc5"
+            ],
+            "node_name": "pve",
+            "numa": [],
+            "on_boot": true,
+            "operating_system": [
+              {
+                "type": "l26"
+              }
+            ],
+            "pool_id": "",
+            "protection": false,
+            "purge_on_destroy": true,
+            "reboot": false,
+            "reboot_after_update": true,
+            "rng": [],
+            "scsi_hardware": "virtio-scsi-pci",
+            "serial_device": [],
+            "smbios": [],
+            "started": true,
+            "startup": [],
+            "stop_on_destroy": false,
+            "tablet_device": true,
+            "tags": null,
+            "template": false,
+            "timeout_clone": 1800,
+            "timeout_create": 1800,
+            "timeout_migrate": 1800,
+            "timeout_move_disk": 1800,
+            "timeout_reboot": 1800,
+            "timeout_shutdown_vm": 1800,
+            "timeout_start_vm": 1800,
+            "timeout_stop_vm": 300,
+            "tpm_state": [],
+            "usb": [],
+            "vga": [
+              {
+                "clipboard": "",
+                "memory": 16,
+                "type": "serial0"
+              }
+            ],
+            "virtiofs": [],
+            "vm_id": 202,
+            "watchdog": []
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "initialization"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "user_account"
+              },
+              {
+                "type": "index",
+                "value": {
+                  "value": 0,
+                  "type": "number"
+                }
+              },
+              {
+                "type": "get_attr",
+                "value": "password"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "bnVsbA=="
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

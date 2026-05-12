@@ -7,6 +7,7 @@ Infrastructure mono-repo for homelab k3s clusters. Managed with Terraform, Ansib
 | Layer | Tool |
 |-------|------|
 | VM provisioning | Terraform (bpg/proxmox) |
+| Terraform state | AWS S3 backend |
 | k3s install | Ansible |
 | GitOps | ArgoCD |
 | Secrets | Sealed Secrets |
@@ -103,6 +104,41 @@ kubernetes/clusters/             # ArgoCD App of Apps entry points per cluster
 kubernetes/infrastructure/       # Infrastructure Applications (MetalLB, Traefik, cert-manager, etc.)
 kubernetes/apps/                 # Workload Applications
 docs/                            # Runbooks and guides
+```
+
+## Terraform Remote State
+
+Terraform state is stored in AWS S3 bucket `bearylabs-platform-tfstate-euc1`.
+
+State keys:
+
+```text
+dus-prod/proxmox-k3s/terraform.tfstate
+fra-prod/oci-k3s/terraform.tfstate
+```
+
+Each Terraform root uses a local, gitignored `backend.hcl` file. Current backend files exist in:
+
+```text
+terraform/live/dus-prod/proxmox-k3s/backend.hcl
+terraform/live/fra-prod/oci-k3s/backend.hcl
+```
+
+`terraform/live/dus-prod/proxmox-maas` does not use remote state yet because it has no Terraform configuration.
+
+### Bootstrap On New Machine
+
+1. Configure AWS CLI credentials with access to bucket `bearylabs-platform-tfstate-euc1`.
+2. Clone this repo.
+3. Run `terraform init -backend-config=backend.hcl` in desired stack directory.
+4. Run `terraform plan` before any `apply`.
+
+Example:
+
+```bash
+cd terraform/live/dus-prod/proxmox-k3s
+terraform init -backend-config=backend.hcl
+terraform plan
 ```
 
 ## Docs
