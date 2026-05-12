@@ -1,9 +1,9 @@
 [control_plane]
-server ansible_host=${server_ip} ansible_user=${ssh_user}
+fra-cp-01 ansible_host=${server_ip} ansible_user=${ssh_user}
 
 [workers]
 %{ for idx, ip in worker_ips ~}
-worker-${idx + 1} ansible_host=${ip} ansible_user=${ssh_user}
+fra-worker-0${idx + 1} ansible_host=${ip} ansible_user=${ssh_user}
 %{ endfor ~}
 
 [cluster:children]

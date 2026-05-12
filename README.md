@@ -38,7 +38,7 @@ Gateway: `10.8.10.1` — DNS: `10.8.10.50` (BIND9)
 |---------|-------|--------|--------|
 | dus-prod | 3 (Mac Mini / Proxmox) | `*.prod.beary.cloud` | active |
 | dus-dev | — | `*.dev.beary.cloud` | planned (Raspberry Pi) |
-| oci-prod | — | `*.oci.beary.cloud` | on hold (capacity issues) |
+| fra-prod | — | `*.oci.beary.cloud` | on hold (capacity issues) |
 
 ### dus-prod nodes
 

@@ -17,7 +17,7 @@ locals {
 resource "oci_core_instance" "server" {
   compartment_id      = var.compartment_ocid
   availability_domain = local.availability_domain
-  display_name        = "${var.cluster_name}-server"
+  display_name        = "fra-cp-01"
   shape               = "VM.Standard.A1.Flex"
 
   shape_config {
@@ -34,7 +34,7 @@ resource "oci_core_instance" "server" {
   create_vnic_details {
     subnet_id        = oci_core_subnet.public.id
     assign_public_ip = true
-    hostname_label   = "${var.cluster_name}-server"
+    hostname_label   = "fra-cp-01"
   }
 
   metadata = {
@@ -52,7 +52,7 @@ resource "oci_core_instance" "workers" {
   count               = 2
   compartment_id      = var.compartment_ocid
   availability_domain = local.availability_domain
-  display_name        = "${var.cluster_name}-worker-${count.index + 1}"
+  display_name        = "fra-worker-0${count.index + 1}"
   shape               = "VM.Standard.A1.Flex"
 
   shape_config {
@@ -69,7 +69,7 @@ resource "oci_core_instance" "workers" {
   create_vnic_details {
     subnet_id        = oci_core_subnet.public.id
     assign_public_ip = true
-    hostname_label   = "${var.cluster_name}-worker-${count.index + 1}"
+    hostname_label   = "fra-worker-0${count.index + 1}"
   }
 
   metadata = {
