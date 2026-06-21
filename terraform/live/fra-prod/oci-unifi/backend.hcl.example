@@ -1,0 +1,5 @@
+bucket       = "bearylabs-platform-tfstate-euc1"
+key          = "fra-prod/oci-unifi/terraform.tfstate"
+region       = "eu-central-1"
+use_lockfile = true
+encrypt      = true

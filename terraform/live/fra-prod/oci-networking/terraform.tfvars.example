@@ -1,0 +1,8 @@
+# Non-secret config is in config.auto.tfvars (committed).
+# Set secrets via environment variables before running terraform:
+#
+# export TF_VAR_tenancy_ocid="ocid1.tenancy.oc1.."
+# export TF_VAR_user_ocid="ocid1.user.oc1.."
+# export TF_VAR_fingerprint="xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+# export TF_VAR_compartment_id="ocid1.tenancy.oc1.."
+# export TF_VAR_private_key_path="$HOME/.oci/api_key.pem"

@@ -5,6 +5,7 @@
 *.tfstate.backup
 *.tfvars
 !*.tfvars.example
+!**/config.auto.tfvars
 override.tf
 override.tf.json
 
@@ -21,3 +22,4 @@ kubeconfig*
 !kubeconfig.example
 
 tmp/
+.envrc
