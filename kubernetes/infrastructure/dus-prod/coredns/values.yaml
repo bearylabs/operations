@@ -1,0 +1,45 @@
+replicaCount: 2
+
+corefile: |
+  beary.cloud:53 {
+    hosts {
+      10.8.10.90  home.beary.cloud
+      10.8.10.91  mqtt.beary.cloud
+      10.8.10.40  nas.beary.cloud
+      fallthrough
+    }
+    forward . 1.1.1.1 1.0.0.1
+    cache 30
+    errors
+    log
+  }
+
+  .:53 {
+    forward . 1.1.1.1 1.0.0.1
+    cache 300
+    errors
+    log
+  }
+
+service:
+  type: LoadBalancer
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "10.8.10.92"
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: coredns
+          topologyKey: kubernetes.io/hostname
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
