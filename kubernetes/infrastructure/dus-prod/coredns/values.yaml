@@ -1,5 +1,11 @@
 replicaCount: 2
 
+serviceType: LoadBalancer
+
+service:
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "10.8.10.92"
+
 corefile: |
   beary.cloud:53 {
     hosts {
@@ -25,11 +31,6 @@ corefile: |
     errors
     log
   }
-
-service:
-  type: LoadBalancer
-  annotations:
-    metallb.universe.tf/loadBalancerIPs: "10.8.10.92"
 
 affinity:
   podAntiAffinity:
