@@ -7,3 +7,5 @@
 # export TF_VAR_compartment_id="ocid1.tenancy.oc1.."
 # export TF_VAR_private_key_path="$HOME/.oci/api_key.pem"
 # export TF_VAR_tailscale_auth_key="tskey-auth-..."
+# export TF_VAR_cloudflare_zone_id="..."   # Cloudflare dashboard → zone overview → Zone ID
+# export CLOUDFLARE_API_TOKEN="..."        # needs Zone:DNS:Edit permission

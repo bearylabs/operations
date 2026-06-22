@@ -8,6 +8,10 @@ terraform {
       source  = "oracle/oci"
       version = "= 6.37.0"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 5.0"
+    }
   }
 }
 
@@ -17,4 +21,8 @@ provider "oci" {
   fingerprint      = var.fingerprint
   private_key_path = var.private_key_path
   region           = var.region
+}
+
+provider "cloudflare" {
+  # reads CLOUDFLARE_API_TOKEN from environment
 }

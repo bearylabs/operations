@@ -108,3 +108,13 @@ module "unifi" {
   ocpus         = 2
   memory_in_gbs = 4
 }
+
+resource "cloudflare_dns_record" "unifi" {
+  zone_id = var.cloudflare_zone_id
+  name    = var.dns_record_name
+  type    = "A"
+  content = module.unifi.public_ip
+  ttl     = 1      # auto (CF-managed)
+  proxied = false  # UniFi devices must reach real IP for inform + STUN
+  comment = "terraform managed"
+}

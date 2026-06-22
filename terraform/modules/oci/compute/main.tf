@@ -28,4 +28,9 @@ resource "oci_core_instance" "this" {
   }
 
   preserve_boot_volume = false
+
+  lifecycle {
+    ignore_changes  = [metadata]
+    prevent_destroy = true
+  }
 }

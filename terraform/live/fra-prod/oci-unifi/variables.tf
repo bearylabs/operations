@@ -69,3 +69,14 @@ variable "unifi_deb_url" {
   description = "Download URL for UniFi OS Server arm64 installer (from ui.com/download/software/unifi-os-server)"
   type        = string
 }
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare zone ID for the domain hosting the UniFi DNS record"
+  type        = string
+  sensitive   = true
+}
+
+variable "dns_record_name" {
+  description = "DNS name for the UniFi controller (e.g. unifi.beary.cloud)"
+  type        = string
+}
