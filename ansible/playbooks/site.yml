@@ -86,14 +86,14 @@
     - name: Fetch kubeconfig
       fetch:
         src: /etc/rancher/k3s/k3s.yaml
-        dest: ~/.kube/config-onprem
+        dest: ~/.kube/config-dus-prod
         flat: true
 
     - name: Fix kubeconfig server address
       delegate_to: localhost
       become: false
       replace:
-        path: ~/.kube/config-onprem
+        path: ~/.kube/config-dus-prod
         regexp: 'https://127\.0\.0\.1:6443'
         replace: "https://{{ control_plane_ip }}:6443"
 

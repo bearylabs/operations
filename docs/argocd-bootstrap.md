@@ -4,7 +4,7 @@ Manual one-time bootstrap. After this, ArgoCD manages itself via Git.
 
 ## Prerequisites
 
-- `kubectl` configured — `KUBECONFIG=~/.kube/config-onprem`
+- `kubectl` configured — `KUBECONFIG=~/.kube/config-dus-prod`
 - Cluster healthy (`kubectl get nodes` all `Ready`)
 
 ## 1. Install ArgoCD
