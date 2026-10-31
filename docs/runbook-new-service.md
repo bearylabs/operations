@@ -150,4 +150,4 @@ ArgoCD syncs within seconds. Monitor in ArgoCD UI at `https://argocd.prod.beary.
 - [ ] Certificate using `letsencrypt-prod`
 - [ ] IngressRoute referencing correct `secretName`
 - [ ] No raw secrets committed — use Sealed Secrets
-- [ ] DNS resolves: `dig my-app.prod.beary.cloud @10.8.10.50`
+- [ ] DNS resolves: `dig my-app.prod.beary.cloud @10.8.10.92`

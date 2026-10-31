@@ -31,7 +31,7 @@ Proxmox on Intel Mac Mini (16GB RAM). Storage on TrueNAS SCALE (`10.8.10.40`, 22
 | 10.8.10.70–89 | k3s nodes |
 | 10.8.10.90–99 | MetalLB pool (k3s LoadBalancer IPs) |
 
-Gateway: `10.8.10.1` — DNS: `10.8.10.50` (BIND9)
+Gateway: `10.8.10.1` — LAN DNS: `10.8.10.92` (CoreDNS, UDP/TCP). Node bootstrap uses independent upstream DNS; see [DNS setup](docs/dns.md).
 
 ### Clusters
 
