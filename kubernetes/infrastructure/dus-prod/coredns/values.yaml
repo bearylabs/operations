@@ -4,11 +4,12 @@ serviceType: LoadBalancer
 
 service:
   annotations:
-    metallb.universe.tf/loadBalancerIPs: "10.8.10.92"
+    metallb.io/loadBalancerIPs: "10.8.10.92"
 
 servers:
   - zones:
       - zone: beary.cloud
+        use_tcp: true
     port: 53
     plugins:
       - name: errors
@@ -31,6 +32,7 @@ servers:
         parameters: "30"
   - zones:
       - zone: .
+        use_tcp: true
     port: 53
     plugins:
       - name: errors

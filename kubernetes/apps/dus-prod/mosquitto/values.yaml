@@ -33,7 +33,7 @@ service:
     controller: mosquitto
     type: LoadBalancer
     annotations:
-      metallb.universe.tf/loadBalancerIPs: 10.8.10.91
+      metallb.io/loadBalancerIPs: 10.8.10.91
     ports:
       mqtt:
         port: 1883

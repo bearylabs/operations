@@ -55,6 +55,73 @@
         - net.bridge.bridge-nf-call-iptables
         - net.bridge.bridge-nf-call-ip6tables
 
+- name: Configure node DNS without a Kubernetes bootstrap dependency
+  hosts: cluster
+  become: true
+  tasks:
+    - name: Create DNS configuration directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /etc/systemd/resolved.conf.d
+        - /etc/systemd/network/10-netplan-eth0.network.d
+
+    - name: Remove obsolete DNS overrides
+      file:
+        path: "/etc/systemd/resolved.conf.d/{{ item }}"
+        state: absent
+      loop:
+        - 10-custom.conf
+        - override.conf
+      notify: Restart systemd-resolved
+
+    - name: Use independent upstreams for node bootstrap and image pulls
+      copy:
+        dest: /etc/systemd/resolved.conf.d/90-operations-bootstrap.conf
+        mode: "0644"
+        content: |
+          [Resolve]
+          DNS=
+          DNS=1.1.1.1 1.0.0.1
+          Domains=
+          Domains=~.
+      notify: Restart systemd-resolved
+
+    - name: Persist site-only DNS routing on the nodes' eth0 link
+      copy:
+        dest: /etc/systemd/network/10-netplan-eth0.network.d/90-operations-dns.conf
+        mode: "0644"
+        content: |
+          [Network]
+          DNS=
+          DNS=10.8.10.92
+          Domains=
+          Domains=~beary.cloud
+      register: site_dns_link
+
+    - name: Reload networkd configuration without reconnecting eth0
+      command: networkctl reload
+      when: site_dns_link.changed
+
+    - name: Apply resolver service changes before configuring the running link
+      meta: flush_handlers
+
+    - name: Apply site DNS on the running link
+      command: resolvectl dns eth0 10.8.10.92
+      changed_when: false
+
+    - name: Apply site-only DNS routing on the running link
+      command: resolvectl domain eth0 '~beary.cloud'
+      changed_when: false
+
+  handlers:
+    - name: Restart systemd-resolved
+      service:
+        name: systemd-resolved
+        state: restarted
+
 - name: Install k3s server
   hosts: control_plane
   become: true

@@ -1,7 +1,7 @@
 locals {
   template_vm_id = 9000
   gateway        = "10.8.10.1"
-  dns_server     = "10.8.10.50"
+  dns_server     = "10.8.10.92"
 
   workers = {
     "worker-01" = { vm_id = 201, ip = "10.8.10.71" }

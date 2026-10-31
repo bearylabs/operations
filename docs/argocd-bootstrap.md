@@ -19,8 +19,13 @@ Install pinned to that version:
 
 ```bash
 kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/VERSION/manifests/install.yaml
+kubectl apply --server-side -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/VERSION/manifests/install.yaml
+kubectl wait --for=condition=Established crd/applications.argoproj.io crd/applicationsets.argoproj.io crd/appprojects.argoproj.io --timeout=120s
 ```
+
+Use server-side apply: large CRDs such as ApplicationSet can exceed the annotation limit when client-side apply stores their entire schema in `kubectl.kubernetes.io/last-applied-configuration`. Verify all three CRDs were installed; running ArgoCD Deployments alone do not establish a complete installation. If `kubectl wait` encounters a transient missing `.status.conditions` immediately after creation, inspect the CRD and retry once the API has populated its status.
+
+For an existing installation, recover a missing CRD from the **same version as the running controller**, not from an unpinned latest release. Do not reinstall or upgrade the whole stack just to restore one missing CRD.
 
 Wait for all pods `Running`:
 

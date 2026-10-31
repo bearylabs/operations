@@ -16,7 +16,7 @@ spec:
       values: |
         service:
           annotations:
-            metallb.universe.tf/loadBalancerIPs: "10.8.10.90"
+            metallb.io/loadBalancerIPs: "10.8.10.90"
         ingressClass:
           enabled: true
           isDefaultClass: true
