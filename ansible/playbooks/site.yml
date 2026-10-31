@@ -57,6 +57,7 @@
 
 - name: Configure node DNS without a Kubernetes bootstrap dependency
   hosts: cluster
+  tags: node_dns
   become: true
   tasks:
     - name: Create DNS configuration directories
